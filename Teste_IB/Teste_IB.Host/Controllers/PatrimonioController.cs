@@ -13,49 +13,34 @@ using Teste_IB.Manage.Model;
 
 namespace Teste_IB.Host.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class PatrimonioController : Controller
     {
         private readonly string ConnectionString;
-        private readonly ILogger logger;
-        public PatrimonioController(IConfiguration configuration, ILogger logger)
+
+        public PatrimonioController(IConfiguration configuration)
         {
             ConnectionString = configuration.GetConnectionString("default");
-            this.logger = logger;
         }
         // GET: api/<controller>
         [HttpGet]
         public IList<Patrimony> Get()
         {
-            try
+
+            using (BrandLogic logic = new BrandLogic(ConnectionString))
             {
-                using (BrandLogic logic = new BrandLogic(ConnectionString))
-                {
-                    return logic.GetAllPatrimony();
-                }
+                return logic.GetAllPatrimony();
             }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, ex.Message);
-                throw;
-            }
+
         }
 
         // GET api/<controller>/5
         [HttpGet("{id}")]
         public Patrimony Get(int id)
         {
-            try
+            using (BrandLogic logic = new BrandLogic(ConnectionString))
             {
-                using (BrandLogic logic = new BrandLogic(ConnectionString))
-                {
-                    return logic.GetPatrimonyById(id);
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, ex.Message);
-                throw;
+                return logic.GetPatrimonyById(id);
             }
         }
 
@@ -63,17 +48,9 @@ namespace Teste_IB.Host.Controllers
         [HttpPost]
         public void Post([FromBody]CreatePatrimonyInput value)
         {
-            try
+            using (BrandLogic logic = new BrandLogic(ConnectionString))
             {
-                using (BrandLogic logic = new BrandLogic(ConnectionString))
-                {
-                    logic.CreatePatrimony(new Patrimony(value.Nome, value.MarcaId, value.descricao));
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, ex.Message);
-                throw;
+                logic.CreatePatrimony(new Patrimony(value.Nome, value.MarcaId, value.descricao));
             }
         }
 
@@ -81,17 +58,9 @@ namespace Teste_IB.Host.Controllers
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]UpdatePatrimonyInput value)
         {
-            try
+            using (BrandLogic logic = new BrandLogic(ConnectionString))
             {
-                using (BrandLogic logic = new BrandLogic(ConnectionString))
-                {
-                    logic.UpdatePatrimony(new Patrimony(value.Id, value.Nome, value.MarcaId, value.descricao));
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, ex.Message);
-                throw;
+                logic.UpdatePatrimony(new Patrimony(id, value.Nome, value.MarcaId, value.descricao));
             }
         }
 
@@ -99,17 +68,9 @@ namespace Teste_IB.Host.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            try
+            using (BrandLogic logic = new BrandLogic(ConnectionString))
             {
-                using (BrandLogic logic = new BrandLogic(ConnectionString))
-                {
-                    logic.DeletePatrimony(id);
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, ex.Message);
-                throw;
+                logic.DeletePatrimony(id);
             }
         }
     }
