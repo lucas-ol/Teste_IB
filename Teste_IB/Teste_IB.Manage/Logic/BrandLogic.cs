@@ -32,7 +32,7 @@ namespace Teste_IB.Manage.Logic
                     while (rd.Read())
                     {
                         Patrimony patrimony = new Patrimony();
-                        patrimony.MarcaId = rd.GetInt32(rd.GetOrdinal("id"));
+                        patrimony.Id = rd.GetInt32(rd.GetOrdinal("id"));
                         patrimony.Nome = rd.GetString(rd.GetOrdinal("nome"));
                         patrimony.MarcaId = rd.GetInt32(rd.GetOrdinal("MarcaId"));
                         patrimony.Descricao = rd.GetString(rd.GetOrdinal("descricao"));
@@ -60,7 +60,7 @@ namespace Teste_IB.Manage.Logic
                 {
                     while (rd.Read())
                     {
-                        patrimony.MarcaId = rd.GetInt32(rd.GetOrdinal("id"));
+                        patrimony.Id = rd.GetInt32(rd.GetOrdinal("id"));
                         patrimony.Nome = rd.GetString(rd.GetOrdinal("nome"));
                         patrimony.MarcaId = rd.GetInt32(rd.GetOrdinal("MarcaId"));
                         patrimony.Descricao = rd.GetString(rd.GetOrdinal("descricao"));
@@ -81,7 +81,7 @@ namespace Teste_IB.Manage.Logic
             {
                 Connection.Open();
                 Cmd.CommandText = $" INSERT INTO patrimony (nome,MarcaId,descricao,numeroTombo)" +
-                    $" VALUES ('{patrimony.Nome}', {patrimony.MarcaId},'{patrimony.Descricao}',{patrimony.CreateTomboNumber()} ";
+                    $" VALUES ('{patrimony.Nome}', {patrimony.MarcaId},'{patrimony.Descricao}',{patrimony.CreateTomboNumber()}) ";
                 Cmd.CommandType = System.Data.CommandType.Text;
                 if (Cmd.ExecuteNonQuery() == 0)
                     throw new DataException("O patrimonio não foi inserido");
@@ -98,7 +98,7 @@ namespace Teste_IB.Manage.Logic
             {
                 Connection.Open();
                 Cmd.CommandText = $" UPDATE patrimony SET nome = '{patrimony.Nome}', MarcaId = {patrimony.MarcaId}," +
-                    $"descricao = '{patrimony.Descricao}', WHERE id = {patrimony.Id}";
+                    $"descricao = '{patrimony.Descricao}' WHERE id = {patrimony.Id}";
                 Cmd.CommandType = System.Data.CommandType.Text;
                 if (Cmd.ExecuteNonQuery() == 0)
                     throw new DataException("O patrimonio não foi atualizado");
@@ -138,11 +138,13 @@ namespace Teste_IB.Manage.Logic
                 {
                     while (rd.Read())
                     {
-                        Patrimony brand = new Patrimony();
-                        brand.MarcaId = rd.GetInt32(rd.GetOrdinal("MarcaId"));
-                        brand.Descricao = rd.GetString(rd.GetOrdinal("descricao"));
-                        brand.NumeroTombo = rd.GetInt32(rd.GetOrdinal("numeroTombo"));
-                        patrimonies.Add(brand);
+                        Patrimony patrimony = new Patrimony();
+                        patrimony.Id = rd.GetInt32(rd.GetOrdinal("id"));
+                        patrimony.Nome = rd.GetString(rd.GetOrdinal("nome"));
+                        patrimony.MarcaId = rd.GetInt32(rd.GetOrdinal("MarcaId"));
+                        patrimony.Descricao = rd.GetString(rd.GetOrdinal("descricao"));
+                        patrimony.NumeroTombo = rd.GetInt32(rd.GetOrdinal("numeroTombo"));
+                        patrimonies.Add(patrimony);
                     }
                 }
                 return patrimonies;
@@ -168,15 +170,11 @@ namespace Teste_IB.Manage.Logic
                     {
                         Brand brand = new Brand();
                         brand.Id = rd.GetInt32(rd.GetOrdinal("id"));
-                        brand.Nome = rd.IsDBNull(rd.GetOrdinal("Nome")) ? "" : rd.GetString(rd.GetOrdinal("nome"));
+                        brand.Nome = rd.GetString(rd.GetOrdinal("nome"));
                         brands.Add(brand);
                     }
                 }
                 return brands;
-            }
-            catch (Exception)
-            {
-                throw;
             }
             finally
             {
@@ -202,10 +200,6 @@ namespace Teste_IB.Manage.Logic
                 }
                 return brand;
             }
-            catch (Exception)
-            {
-                throw;
-            }
             finally
             {
                 Connection.Close();
@@ -221,7 +215,6 @@ namespace Teste_IB.Manage.Logic
                 Cmd.CommandType = System.Data.CommandType.Text;
                 if (Cmd.ExecuteNonQuery() == 0)
                     throw new DataException("A linha não foi inserida");
-
             }
 
             finally
@@ -237,7 +230,7 @@ namespace Teste_IB.Manage.Logic
                 Cmd.CommandText = $" UPDATE brand SET [nome] = '{brand.Nome}' WHERE id = {brand.Id}";
                 Cmd.CommandType = System.Data.CommandType.Text;
                 if (Cmd.ExecuteNonQuery() == 0)
-                    throw new DataException("A linha não foi atualizada");
+                    throw new DataException("Marca não encontrada");
 
             }
             finally
