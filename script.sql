@@ -7,7 +7,7 @@ CREATE TABLE [dbo].[brand](
 	nome nvarchar(20) NOT NULL,
 );
 
-create index ix_brand_nome on [brand](nome);
+create unique index  ix_brand_nome on [brand](nome);
 
 CREATE TABLE patrimony(
 	id int primary key IDENTITY,
